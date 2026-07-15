@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Category = require('../models/Category');
 const Restaurant = require('../models/Restaurant');
 const MenuItem = require('../models/MenuItem');
+const Offer = require('../models/Offer');
 
 // Using placeholder food images from Unsplash source (free, no API key
 // needed) so the app looks realistic immediately. Swap these URLs
@@ -17,7 +18,8 @@ const run = async () => {
   await Category.deleteMany({});
   await Restaurant.deleteMany({});
   await MenuItem.deleteMany({});
-  console.log('Cleared existing categories/restaurants/menu items.');
+  await Offer.deleteMany({});
+  console.log('Cleared existing categories/restaurants/menu items/offers.');
 
   // --- Categories ---
   const categories = await Category.insertMany([
@@ -99,6 +101,29 @@ const run = async () => {
     { name: 'Healthy Veggie Salad', price: 480, image: img('veggie salad bowl'), restaurant: restaurants[3]._id, category: catByName['Healthy Salads'] },
   ]);
   console.log('Seeded menu items.');
+
+  // --- Offers ---
+  await Offer.insertMany([
+    {
+      title: 'Fresh & Spicy Delicious Chicken',
+      image: img('spicy fried chicken offer'),
+      discountPercent: 50,
+      restaurant: restaurants[0]._id,
+    },
+    {
+      title: 'Special Food Offer',
+      image: img('food offer banner'),
+      discountPercent: 50,
+      restaurant: restaurants[2]._id,
+    },
+    {
+      title: "Today's Special",
+      image: img('special meal deal'),
+      discountPercent: 30,
+      restaurant: restaurants[1]._id,
+    },
+  ]);
+  console.log('Seeded offers.');
 
   console.log('Seeding complete!');
   await mongoose.disconnect();
