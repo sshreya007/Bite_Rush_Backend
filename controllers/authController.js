@@ -79,4 +79,26 @@ const getMe = async (req, res) => {
   });
 };
 
-module.exports = { registerUser, loginUser, getMe };
+// @route  PUT /api/auth/profile  (protected)
+const updateProfile = async (req, res) => {
+  try {
+    const { name, phone } = req.body;
+
+    if (name) req.user.name = name;
+    if (phone) req.user.phone = phone;
+    await req.user.save();
+
+    return res.status(200).json({
+      user: {
+        id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        phone: req.user.phone,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, getMe, updateProfile };
